@@ -1,0 +1,261 @@
+﻿<Window x:Class="Home_6.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Home_6"
+        mc:Ignorable="d"
+        Title="Notepad" Height="375" Width="505" Icon="Icons/Notepad.ico" MinHeight="370" MinWidth="500" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Window.Resources>
+        <Style x:Key="btnStyle" TargetType="Button">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="20" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Name="controlLayout">
+                            <Rectangle Name="recOver" Fill="LightBlue" Stroke="#FF5080E8" StrokeThickness="1" Visibility="Hidden" />
+                            <Rectangle Name="recPress" Fill="#FFADC7E6" Stroke="#FF5080E8" StrokeThickness="1" Visibility="Hidden" />
+                            <Rectangle Fill="{TemplateBinding Background}" Width="16" Height="16" />                            
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="recOver" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="recPress" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="New" Executed="NewCommand_Executed" />
+        <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="Save_CanExecute" />
+        <CommandBinding Command="SaveAs" Executed="SaveAsCommand_Executed" />
+        <CommandBinding Command="Open" Executed="OpenCommand_Executed" />
+
+        <CommandBinding Command="Copy" CanExecute="CmdCopy_CanExecute" />
+        <CommandBinding Command="SelectAll" CanExecute="CmdCopy_CanExecute" />
+        <CommandBinding Command="Delete" CanExecute="CmdCopy_CanExecute" Executed="CmdDelete_Executed" />
+        <CommandBinding Command="Paste" CanExecute="CmdPaste_CanExecute" />
+        <CommandBinding Command="Replace" CanExecute="CmdReplace_CanExecute" Executed="CmdReplace_Executed" />
+        <CommandBinding Command="Undo" CanExecute="CmdPaste_CanExecute" />
+        <CommandBinding Command="Redo" CanExecute="CmdPaste_CanExecute" />
+
+        <CommandBinding Command="Find" CanExecute="CmdFind_CanExecute" />
+    </Window.CommandBindings>
+    
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Command="New">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/NewDocumentHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Open..." Command="Open">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/openHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save" Command="Save">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/saveHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save as..." Command="SaveAs" />
+                
+                <Separator />
+
+                <MenuItem Header="Page Setup">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/PrintSetupHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Print Preview" InputGestureText="Ctrl+F2">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/PrintPreviewHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Print..." Command="Print">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/PrintHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+
+                <MenuItem Header="Exit" Command="Close" />
+            </MenuItem>
+
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" Command="Undo">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/Edit_UndoHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Redo" Command="Redo">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/Edit_RedoHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+
+                <MenuItem Header="Cut" Command="Cut">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/CutHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Copy" Command="Copy">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/CopyHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Paste" Command="Paste">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/PasteHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Delete" Command="Delete">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/DeleteHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+
+                <MenuItem Header="Find" Command="Find">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/FindHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Find Next" InputGestureText="F3" />
+                <MenuItem Header="Replace" Command="Replace" />
+                <MenuItem Header="Go To..." InputGestureText="Ctrl+G" Click="GoToItem_Click" />
+                <Separator />
+
+                <MenuItem Header="Select All" Command="SelectAll" />
+            </MenuItem>
+            
+            <MenuItem Header="Format">
+                <MenuItem Header="Font..." Click="CmdFormat_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Icons/FontHS.png" Width="15" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+
+                <MenuItem Name="WordWrapItem" Header="Word Wrap" IsCheckable="True" InputGestureText="Ctrl+W" Click="MenuItem_Click" />
+            </MenuItem>
+            
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="About_Click" />
+            </MenuItem>
+        </Menu>
+
+        <ToolBarTray DockPanel.Dock ="Top" Orientation="Horizontal" IsLocked="False">
+            <ToolBar DockPanel.Dock ="Top" >
+                <Button Command="New" Style="{StaticResource btnStyle}" ToolTip="New">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/NewDocumentHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Open" Style="{StaticResource btnStyle}" ToolTip="Open">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/openHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Save" Style="{StaticResource btnStyle}" ToolTip="Save">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/saveHS.png" />
+                    </Button.Background>
+                </Button>
+            </ToolBar>
+            
+            <ToolBar DockPanel.Dock ="Top" >
+                <Button Command="Undo" Style="{StaticResource btnStyle}" ToolTip="Undo">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/Edit_UndoHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Redo" Style="{StaticResource btnStyle}" ToolTip="Redo">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/Edit_RedoHS.png" />
+                    </Button.Background>
+                </Button>
+                <Separator />
+
+                <Button Command="Cut" Style="{StaticResource btnStyle}" ToolTip="Cut">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/CutHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Copy" Style="{StaticResource btnStyle}" ToolTip="Copy">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/CopyHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Paste" Style="{StaticResource btnStyle}" ToolTip="Paste">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/PasteHS.png" />
+                    </Button.Background>
+                </Button>
+                <Button Command="Delete" Style="{StaticResource btnStyle}" ToolTip="Delete">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/DeleteHS.png" />
+                    </Button.Background>
+                </Button>
+            </ToolBar>
+
+            <ToolBar DockPanel.Dock ="Top" >
+                <Label>Find:</Label>
+                <TextBox MinWidth="100" Name="txtFind" MaxLines="1" KeyUp="txtFind_KeyDown" />
+                <Button Command="Find" Style="{StaticResource btnStyle}" ToolTip="Find">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Icons/FindHS.png" />
+                    </Button.Background>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <StatusBar DockPanel.Dock="Bottom" Background="White" HorizontalAlignment="Right" MinHeight="30">
+            <StatusBarItem>
+                <Label Name="lLine" MinWidth="100" HorizontalContentAlignment="Right" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label Name="lCol" MinWidth="100" HorizontalContentAlignment="Right" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <TextBox Name="txtMain" AcceptsTab="True" AcceptsReturn="True" SelectionChanged="txtMain_SelectionChanged">
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Cut" Command="Cut">
+                        <MenuItem.Icon>
+                            <Image Source="Icons/CutHS.png" Width="15" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy" Command="Copy">
+                        <MenuItem.Icon>
+                            <Image Source="Icons/CopyHS.png" Width="15" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste" Command="Paste">
+                        <MenuItem.Icon>
+                            <Image Source="Icons/PasteHS.png" Width="15" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete" Command="Delete">
+                        <MenuItem.Icon>
+                            <Image Source="Icons/DeleteHS.png" Width="15" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
+    </DockPanel>
+</Window>
